@@ -172,9 +172,9 @@ ZipUtils：static File unGZip(final File file)，主要使用FileOutputStream、
 
 1. JAR 包直接引入方式
 
-  > _http://gitea.onmouse.cn/common-jar/wx-java-pay.git_，版本发布中提供jar包或者自己下载项目手动打包
+  > 版本发布中提供jar包或者自己下载项目手动打包
 
-2. 微信平台服务中获取 > _http://wxserver.onmouse.cn/notifyApi_，api 服务获取
+2. 服务中获取 > _http://xx.xx.xx/api_，api 服务获取
   :::
 
 ### JAR 包直接引入方式
@@ -193,7 +193,7 @@ ZipUtils：static File unGZip(final File file)，主要使用FileOutputStream、
 2. > 自己打成JAR包
 ```bash
 
-1. git clone http://gitea.onmouse.cn/common-jar/wx-java-pay.git -b master
+1. git fork下来之后
 
 	 下载maven包后
 
@@ -201,14 +201,14 @@ ZipUtils：static File unGZip(final File file)，主要使用FileOutputStream、
 
 3. 然后需要将jar打到自己的maven仓库中，cmd中请使用以下命令
 
-	 > 1. mvn install:install-file -Dfile=项目下的src/main/resources/lib/java-pay-1.0.0.jar的绝对路径 -DgroupId=oms.pay -DartifactId=java-pay -Dversion=1.0.0 -Dpackaging=jar
+	 > 1. mvn install:install-file -Dfile=项目下的src/main/resources/lib/java-pay-1.0.2.jar的绝对路径 -DgroupId=oms.pay -DartifactId=java-pay -Dversion=1.0.0 -Dpackaging=jar
 
 	 > 2. 将下列dependency保存到项目中pom.xml的dependencies
 
 	 		<dependency>
   				<groupId>oms.pay</groupId>
     			<artifactId>java-pay</artifactId>
-    			<version>1.0.0</version>
+    			<version>1.0.2</version>
   			</dependency>
 
 	 > 3. 最后，右键选择-maven-reload project，重新下载包即可
@@ -221,12 +221,12 @@ ZipUtils：static File unGZip(final File file)，主要使用FileOutputStream、
 
 wx:
    pay:
-		appId: wx3077e7b6cc7421d2
-    	mchId: 1613402222
-    	mchKey: daJMFWiLrsYQ4LKdaSZr1cjQyVM7SolG
+	appId: 
+    	mchId: 
+    	mchKey: 
     	subAppId:
     	subMchId:
-    	keyPath: /www/wwwroot/app/fenxiao/cert/apiclient_cert.p12  //p12的证书文件（绝密文件，涉及到退款接口等），目前存放在164服务器上
+    	keyPath:   //p12的证书文件（绝密文件，涉及到退款接口等）自己到商家微信支付平台中下载
 
 2. 创建资源映射类以及微信支付配置类
 
@@ -320,10 +320,10 @@ public String post(String url, String xmlString, boolean useKey) {
 	}
 }
 
-方法2： 直接使用微信服务平台接口
+方法2： 自己手动实现controller层的实现
 
 微信服务平台接口前缀：
-   > http://wxserver.onmouse.cn/notifyApi
+   > http://xx.xx.xx/api
 ```
 
 ## API接口以及参数说明
@@ -332,7 +332,7 @@ public String post(String url, String xmlString, boolean useKey) {
 
 ```json
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/queryOrder
+请求地址：http://xx.xx.xx/api/wx/pay/queryOrder
 请求方法：get
 参数注解：@RequestParam
 请求参数：二者选其一
@@ -344,7 +344,7 @@ public String post(String url, String xmlString, boolean useKey) {
 	"outTradeNo": "String"
 }
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/queryOrder
+请求地址：http://xx.xx.xx/api/wx/pay/queryOrder
 请求方法：post
 参数注解：@RequestBody
 请求参数：二者选其一
@@ -363,7 +363,7 @@ public String post(String url, String xmlString, boolean useKey) {
 ```json
 
 IP地址获取，用于获取客户端IP
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/getDeviceIp
+请求地址：http://xx.xx.xx/api/wx/pay/getDeviceIp
 请求方法：get
 获取到的IP可以用于赋值下述的"spbillCreateIp"字段
 
@@ -373,7 +373,7 @@ IP地址获取，用于获取客户端IP
 
 ```json
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/createOrder
+请求地址：http://xx.xx.xx/api/wx/pay/createOrder
 请求方法：post
 参数注解：@RequestBody
 请求参数：
@@ -391,7 +391,7 @@ IP地址获取，用于获取客户端IP
 	"spbillCreateIp": "String，192.168.8.72",
 
 	// body 异步接收微信支付结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。 公网域名必须为https，如果是走专线接入，使用专线NAT IP或者私有回调域名可使用http
-	"notifyUrl": "String，http://wxserver.onmouse.cn/notifyApi/wx/pay/notify/scanpay",
+	"notifyUrl": "String，http://xx.xx.xx/api/wx/pay/notify/scanpay",
 
 	// 商户系统内部订单号，要求32个字符内（最少6个字符），只能是数字、大小写字母_-|*且在同一个商户号下唯一
 	"outTradeNo": "String，推荐使用当前时间戳+特定不会重复的名称",
@@ -407,7 +407,7 @@ IP地址获取，用于获取客户端IP
 
 不是主动调用，前提是将链接发送给微信服务器，然后，微信服务器接收到支付请求后，将结果回传给该API
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/notify/scanpay
+请求地址：http://xx.xx.xx/api/wx/pay/notify/scanpay
 请求方式：post
 参数注解：@RequestBody
 参数：字符串形式xmlData
@@ -418,7 +418,7 @@ IP地址获取，用于获取客户端IP
 
 ```json
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/refund
+请求地址：http://xx.xx.xx/api/wx/pay/refund
 请求方式：post
 参数注解：@RequestBody
 请求参数：
@@ -428,7 +428,7 @@ IP地址获取，用于获取客户端IP
 	// 商户内部定义退款号
 	"outRefundNo": "String，建议跟创建订单相同方式",
 	// 异步接收微信支付退款结果通知的回调地址，通知URL必须为外网可访问的url，不允许带参数。公网域名必须为https，如果是走专线接入，使用专线NAT IP或者私有回调域名可使用http。如果参数中传了notify_url，则商户平台上配置的回调地址将不会生效。
-	"notifyUrl": "String，http://wxserver.onmouse.cn/notifyApi/wx/pay/notify/refund",
+	"notifyUrl": "String，http://xx.xx.xx/api/wx/pay/notify/refund",
 	// 订单总金额
 	"totalFee": "Integer，订单总金额",
 	// 退款金额
@@ -443,7 +443,7 @@ IP地址获取，用于获取客户端IP
 
 不是主动调用，前提是将链接发送给微信服务器，然后，微信服务器接收到退款请求后，将结果回传给该API
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/notify/refund
+请求地址：http://xx.xx.xx/api/wx/pay/notify/refund
 请求方式：post
 参数注解：@RequestBody
 参数：字符串形式xmlData
@@ -454,7 +454,7 @@ IP地址获取，用于获取客户端IP
 
 ```json
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/refundQuery
+请求地址：http://xx.xx.xx/api/wx/pay/refundQuery
 请求方法：get
 参数注解：@RequestParam
 请求参数：四者选其一
@@ -470,7 +470,7 @@ IP地址获取，用于获取客户端IP
 	"refundId": "String"
 }
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/queryOrder
+请求地址：http://xx.xx.xx/api/wx/pay/queryOrder
 请求方法：post
 参数注解：@RequestBody
 请求参数：四者选其一
@@ -508,7 +508,7 @@ IP地址获取，用于获取客户端IP
 
 6、自2018年起入驻的商户默认是开通免充值券后的结算对账单，且汇总数据为总交易单数，应结订单总金额，退款总金额，充值券退款总金额，手续费总金额，订单总金额，申请退款总金额
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/downloadBill
+请求地址：http://xx.xx.xx/api/wx/pay/downloadBill
 请求方法：get
 参数注解：@RequestParam
 请求参数：
@@ -522,7 +522,7 @@ IP地址获取，用于获取客户端IP
 	"tarType": "String，GZIP"
 }
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/downloadBill
+请求地址：http://xx.xx.xx/api/wx/pay/downloadBill
 请求方法：post
 参数注解：@RequestBody
 请求参数：
@@ -542,7 +542,7 @@ IP地址获取，用于获取客户端IP
 
 ```json
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/downloadFundFlow
+请求地址：http://xx.xx.xx/api/wx/pay/downloadFundFlow
 请求方法：get
 参数注解：@RequestParam
 请求参数：
@@ -556,7 +556,7 @@ IP地址获取，用于获取客户端IP
 	"tarType": "String，GZIP"
 }
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/downloadFundFlow
+请求地址：http://xx.xx.xx/api/wx/pay/downloadFundFlow
 请求方法：post
 参数注解：@RequestBody
 请求参数：
@@ -576,7 +576,7 @@ IP地址获取，用于获取客户端IP
 
 ```json
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/closeOrder
+请求地址：http://xx.xx.xx/api/wx/pay/closeOrder
 请求方法：get
 参数注解：@RequestParam
 请求参数：
@@ -586,7 +586,7 @@ IP地址获取，用于获取客户端IP
 	"out_trade_no": ""
 }
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/closeOrder
+请求地址：http://xx.xx.xx/api/wx/pay/closeOrder
 请求方法：post
 参数注解：@RequestBody
 请求参数：
@@ -602,7 +602,7 @@ IP地址获取，用于获取客户端IP
 
 ```json
 
-请求地址：http://wxserver.onmouse.cn/notifyApi/wx/pay/report
+请求地址：http://xx.xx.xx/api/wx/pay/report
 请求方法：post
 参数注解：@RequestBody
 请求参数：
@@ -613,7 +613,7 @@ IP地址获取，用于获取客户端IP
 	// https://api.mch.weixin.qq.com/pay/micropay/total
 	// 关于两种接入模式具体可参考本文档章节：刷卡支付商户接入模式
 	// 其它接口调用仍然按照调用一次，上报一次来进行
-	"interfaceUrl": "localhost:8013/wx/pay/queryOrder?outTradeNo=1680515740213omsit",
+	"interfaceUrl": "https://api.mch.weixin.qq.com/pay/unifiedorder",
 	// 接口耗时情况，单位为毫秒
 	// 注意：该参数最后带有下划线“_”，参数设计如此，非文档问题
 	"executeTime": 1000,
