@@ -1,16 +1,5 @@
 # wxpay_java
 微信支付插件包
-<style lang="scss">
-  .container{
-    max-width:72rem !important
-  }
-</style>
-<script setup>
-  import PictureComp from '../../components/PictureComp.vue'
-  import Location from '../../components/Location.vue'
-  const homeUrl = `${window.location.origin}/systemStandard/index`
-</script>
-<Location :homeUrl="homeUrl"/>
 
 # 微信支付插件使用说明
 
